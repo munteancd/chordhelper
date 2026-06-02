@@ -1,0 +1,5 @@
+:root{--bg:#11151f;--panel:#1b1f2a;--panel2:#222736;--line:#333a4d;--accent:#4ea1ff;--accent2:#b07cff;--ok:#8be08b;--text:#e7ebf3;--muted:#7f8aa3;}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;}
+#app{max-width:980px;margin:0 auto;padding:16px;}
+button{cursor:pointer;font:inherit;}
