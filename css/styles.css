@@ -50,3 +50,24 @@ button.primary{background:var(--accent);color:#06101f;border:none;border-radius:
 .done-btn{margin-top:14px;width:100%;}
 .ref-view{margin-top:10px;}
 @media(max-width:640px){.exercise{flex-direction:column;}.ex-right{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:12px;}}
+.song-list,.chord-strip{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.chord-strip{flex-direction:row;flex-wrap:wrap;gap:8px;}
+.song-card{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text);text-align:left;}
+.song-card .meta{display:flex;flex-direction:column;}
+.song-card small{color:var(--muted);}
+.song-input,.song-textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px;margin:6px 0;font:inherit;}
+.song-textarea{font-family:ui-monospace,Consolas,monospace;white-space:pre;overflow-x:auto;}
+.song-meta{color:var(--muted);font-size:13px;margin:6px 0;}
+.chord-mini{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px;width:78px;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:2px;}
+.chord-mini .chord-svg{max-width:64px;}
+.chord-mini.unknown{opacity:.6;}
+.cm-name{font-weight:700;font-size:13px;}
+.cm-na{font-size:22px;color:var(--muted);}
+.song-strum{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0;}
+.song-body{margin:12px 0;overflow-x:auto;}
+.song-row{margin-bottom:2px;}
+.chord-line{margin:0;color:var(--accent);font-weight:700;font-family:ui-monospace,Consolas,monospace;white-space:pre;}
+.lyric-line{margin:0 0 8px;color:var(--text);font-family:ui-monospace,Consolas,monospace;white-space:pre;}
+.chord-detail{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0;text-align:center;}
+.chord-detail .chord-svg{max-width:200px;margin:0 auto;}
+button.danger{background:none;border:1px solid #e06b6b;color:#e06b6b;border-radius:10px;padding:10px 16px;margin-top:8px;}
