@@ -2,13 +2,16 @@
 import { createRouter } from './router.js';
 import { createCourse } from './courseEngine.js';
 import { createAudioEngine } from './audioEngine.js';
+import { createSongStore } from './songStore.js';
 import { screenHome, screenLessons, screenExercise } from './screens.js';
 import { screenReference } from './reference.js';
+import { screenSongs, screenSongNew, screenSong } from './songMode.js';
 
 const root = document.getElementById('app');
 const course = createCourse(window.localStorage);
 const audio = createAudioEngine();
-const ctx = { course, audio, router: null };
+const songs = createSongStore(window.localStorage);
+const ctx = { course, audio, songs, router: null };
 const router = createRouter(render);
 ctx.router = router;
 
@@ -19,6 +22,9 @@ function render(route) {
   if (route.name === 'lessons') mount(screenLessons(ctx));
   else if (route.name === 'lesson') mount(screenExercise(ctx, route.param));
   else if (route.name === 'reference') mount(screenReference(ctx));
+  else if (route.name === 'songs') mount(screenSongs(ctx));
+  else if (route.name === 'song-new') mount(screenSongNew(ctx));
+  else if (route.name === 'song') mount(screenSong(ctx, route.param));
   else mount(screenHome(ctx));
 }
 
