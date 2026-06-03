@@ -1,5 +1,5 @@
 // service-worker.js
-const CACHE = 'chordhelper-v1';
+const CACHE = 'chordhelper-v2';
 const ASSETS = [
   './', './index.html', './manifest.json', './icon.svg',
   './css/styles.css',
