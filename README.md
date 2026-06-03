@@ -24,3 +24,9 @@ scheduling math, and the course/progress engine.
 - `js/` — app code (pure modules + thin DOM/audio layers)
 - `data/` — instruments, chords, strumming patterns, lessons
 - `test/` — node:test unit tests
+
+## Song Mode
+Paste any song's chord sheet (chords written above the lyrics) under **Piese → Piesă
+nouă**. ChordHelper renders the lyrics with chord diagrams above the words, plays each
+chord, suggests a strumming pattern with the metronome, and saves the song locally on
+your device. Backed by a comprehensive chord dictionary (`data/chordLibrary.js`).
