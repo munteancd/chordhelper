@@ -79,10 +79,18 @@ depends on it (reference and lessons both use the library).
 ### Challenge songs
 - **`data/songsBuiltin.js`** (new): short challenge pieces, one per level, each
   using **only chords taught up to that level**.
-- **Copyright safety:** challenge content uses public-domain / traditional
-  melodies (e.g. folk tunes) or original simple practice progressions. **No
-  copyrighted lyrics are reproduced.** Where a piece has no public-domain lyrics,
-  it ships as a labelled chord progression (a "vamp") without lyrics.
+- **Real named songs, chord progressions only.** Each challenge references a real,
+  well-known song **by title + artist** (factual, not protected) and ships the
+  **chord progression** for it (chord sequences are not copyrightable) plus a
+  suggested strumming pattern and tempo. **No copyrighted lyrics are reproduced**
+  in any shipped file — this is a hard guardrail. The chord-line/lyric body for a
+  built-in challenge therefore shows chords (and section labels like
+  Verse/Chorus) without lyric text.
+- **User can add their own lyrics:** in Song Mode the user may paste lyrics under
+  the chords (the existing chord-sheet parser already supports this); those stay
+  local to the user's device. The app never originates copyrighted lyrics.
+- Each challenge song is matched to the chords of its level (e.g. guitar L1
+  Em/A/D/G → a famous song built on exactly those chords).
 - On completing a level, the Lessons screen shows a "🎵 Cântă o piesă" card that
   loads the built-in song into Song Mode (reusing the existing Song Mode screen
   and player). Built-in songs are read-only (not stored in the user's song list).
