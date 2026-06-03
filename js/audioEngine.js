@@ -50,7 +50,7 @@ export function createAudioEngine() {
       // schedule UI highlight close to audio time
       const delayMs = Math.max(0, (when - c.currentTime) * 1000);
       const slot = idx % 8;
-      if (onTick) setTimeout(() => onTick(slot, idx), delayMs);
+      if (onTick) setTimeout(() => { if (onTick) onTick(slot, idx); }, delayMs);
       nextTickTime += d;
       tickIndex++;
     }

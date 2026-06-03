@@ -58,7 +58,6 @@ export function screenExercise(ctx, lessonId) {
   const el = document.createElement('div');
   if (!lesson) { el.textContent = 'Lecție inexistentă'; return el; }
 
-  const firstChord = CHORDS[inst][lesson.chords[0]];
   const patternId = lesson.strumming;
   el.innerHTML = `
     <button class="back" id="back">‹ Lecții</button>
