@@ -100,7 +100,7 @@ Make the dictionary obviously rich and easy to navigate.
 
 ### UI (`js/reference.js`)
 - A row of **root buttons** (C, C#, D, … B) and a row of **type buttons**
-  (major, minor, 7, m7, maj7, m7, sus2, sus4, dim, aug, …). Selecting root + type
+  (major, minor, 7, m7, maj7, m6, sus2, sus4, dim, aug, …). Selecting root + type
   shows the chord diagram + a "🔊 Ascultă" button.
 - A free-text input: typing e.g. `Bbm7` resolves and shows the diagram (reusing
   `getChordShape` enharmonic handling).
