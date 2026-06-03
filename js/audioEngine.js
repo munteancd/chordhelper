@@ -1,14 +1,6 @@
 // js/audioEngine.js
 import { eighthDuration, isQuarter } from './scheduleMath.js';
 
-const NOTE_SEMITONE = { C:0, 'C#':1, D:2, 'D#':3, E:4, F:5, 'F#':6, G:7, 'G#':8, A:9, 'A#':10, B:11 };
-
-// Rough open-string MIDI numbers (octave chosen for a pleasant reference range).
-function openMidi(note) {
-  const base = 48; // C3
-  return base + NOTE_SEMITONE[note];
-}
-
 function midiToFreq(m) { return 440 * Math.pow(2, (m - 69) / 12); }
 
 export function createAudioEngine() {
@@ -77,8 +69,7 @@ export function createAudioEngine() {
       let s = 0;
       chord.frets.forEach((fret, i) => {
         if (fret < 0) return; // muted
-        const note = instrument.tuning[i];
-        const midi = openMidi(note) + i * 5 + fret; // spread strings upward
+        const midi = instrument.openMidi[i] + fret; // real open-string pitch + fret
         const freq = midiToFreq(midi);
         const osc = c.createOscillator();
         const gain = c.createGain();
