@@ -1,0 +1,13 @@
+{
+  "name": "ChordHelper",
+  "short_name": "ChordHelper",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#11151f",
+  "theme_color": "#11151f",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
