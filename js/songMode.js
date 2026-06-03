@@ -88,11 +88,11 @@ export function screenSong(ctx, id) {
   // chord strip (unique chords)
   const strip = el.querySelector('.chord-strip');
   const detail = el.querySelector('.chord-detail');
-  function showDetail(name) {
+  function showDetail(name, play = true) {
     const shape = getChordShape(name, instrument);
     if (!shape) { detail.innerHTML = `<div class="chord-name">${escapeHtml(name)}</div><p class="subtitle">diagramă indisponibilă</p>`; return; }
     detail.innerHTML = `<div class="chord-name">${escapeHtml(name)}</div>` + renderChordSVG(shape, instrument);
-    ctx.audio.playChord(shape, instrument);
+    if (play) ctx.audio.playChord(shape, instrument);
   }
   chordsUsed.forEach((name) => {
     const shape = getChordShape(name, instrument);
@@ -143,7 +143,7 @@ export function screenSong(ctx, id) {
     else { toggle.textContent = '▶ Start'; ctx.audio.stop(); strum.clear(); }
   };
 
-  if (chordsUsed.length) showDetail(chordsUsed[0]);
+  if (chordsUsed.length) showDetail(chordsUsed[0], false);
   return el;
 }
 
