@@ -1,6 +1,6 @@
 // js/screens.js
 import { INSTRUMENTS } from '../data/instruments.js';
-import { CHORDS } from '../data/chords.js';
+import { getChordShape } from './chordLib.js';
 import { renderChordSVG } from './chordRenderer.js';
 import { getPattern } from './strumming.js';
 import { renderStrumming } from './strummingView.js';
@@ -30,23 +30,43 @@ export function screenHome(ctx) {
 
 export function screenLessons(ctx) {
   const inst = ctx.course.getInstrument();
-  const lessons = ctx.course.getLessons(inst);
+  const levels = ctx.course.getLevels(inst);
+  const completed = ctx.course.getCompleted(inst);
   const el = document.createElement('div');
   el.innerHTML = `<button class="back" id="back">‹ Acasă</button>
-    <h2>Lecții — ${INSTRUMENTS[inst].name}</h2><div class="lesson-list"></div>`;
+    <h2>Lecții — ${INSTRUMENTS[inst].name}</h2><div class="level-list"></div>`;
   el.querySelector('#back').onclick = () => ctx.router.go('/');
-  const list = el.querySelector('.lesson-list');
-  lessons.forEach((lesson, i) => {
-    const unlocked = ctx.course.isUnlocked(inst, i);
-    const done = ctx.course.getCompleted(inst).includes(lesson.id);
-    const card = document.createElement('button');
-    card.className = 'lesson-card' + (unlocked ? '' : ' locked') + (done ? ' done' : '');
-    card.disabled = !unlocked;
-    card.innerHTML = `<span class="num">${i + 1}</span>
-      <span class="meta"><b>${lesson.title}</b><small>${lesson.goal}</small></span>
-      <span class="state">${done ? '✓' : unlocked ? '' : '🔒'}</span>`;
-    card.onclick = () => ctx.router.go('/lesson/' + lesson.id);
-    list.appendChild(card);
+  const list = el.querySelector('.level-list');
+  let flatIndex = 0;
+  levels.forEach((lv, li) => {
+    const prevComplete = li === 0 || ctx.course.isLevelComplete(inst, levels[li - 1].id);
+    const doneCount = lv.lessons.filter((l) => completed.includes(l.id)).length;
+    const section = document.createElement('div');
+    section.className = 'level' + (prevComplete ? '' : ' locked');
+    section.innerHTML = `<div class="level-head">
+      <b>${lv.title}</b>
+      <span class="progress"><span style="width:${Math.round(100 * doneCount / lv.lessons.length)}%"></span></span>
+      <small>${doneCount}/${lv.lessons.length}</small></div>`;
+    lv.lessons.forEach((lesson) => {
+      const idx = flatIndex++;
+      const unlocked = ctx.course.isUnlocked(inst, idx);
+      const done = completed.includes(lesson.id);
+      const card = document.createElement('button');
+      card.className = 'lesson-card' + (unlocked ? '' : ' locked') + (done ? ' done' : '');
+      card.disabled = !unlocked;
+      card.innerHTML = `<span class="meta"><b>${lesson.title}</b><small>${lesson.goal}</small></span>
+        <span class="state">${done ? '✓' : unlocked ? '' : '🔒'}</span>`;
+      card.onclick = () => ctx.router.go('/lesson/' + lesson.id);
+      section.appendChild(card);
+    });
+    if (ctx.course.isChallengeUnlocked(inst, lv.id) && lv.challenge) {
+      const ch = document.createElement('button');
+      ch.className = 'challenge-card';
+      ch.textContent = '🎵 Cântă o piesă cu ce ai învățat';
+      ch.onclick = () => ctx.router.go('/song/builtin:' + lv.challenge);
+      section.appendChild(ch);
+    }
+    list.appendChild(section);
   });
   return el;
 }
@@ -90,9 +110,9 @@ export function screenExercise(ctx, lessonId) {
   const holder = el.querySelector('.chord-holder');
   const switchEl = el.querySelector('.chord-switch');
   function drawChord() {
-    const ch = CHORDS[inst][current];
-    nameEl.textContent = ch.name + ' · ' + ch.displayName;
-    holder.innerHTML = renderChordSVG(ch, instrument);
+    const ch = getChordShape(current, instrument);
+    nameEl.textContent = current;
+    holder.innerHTML = ch ? renderChordSVG(ch, instrument) : '<p class="subtitle">diagramă indisponibilă</p>';
   }
   lesson.chords.forEach((cn) => {
     const b = document.createElement('button');
@@ -126,7 +146,10 @@ export function screenExercise(ctx, lessonId) {
     }
   };
 
-  el.querySelector('#play-chord').onclick = () => ctx.audio.playChord(CHORDS[inst][current], instrument);
+  el.querySelector('#play-chord').onclick = () => {
+    const ch = getChordShape(current, instrument);
+    if (ch) ctx.audio.playChord(ch, instrument);
+  };
   el.querySelector('#done').onclick = () => { ctx.audio.stop(); ctx.course.markComplete(inst, lesson.id); ctx.router.go('/lessons'); };
   return el;
 }
