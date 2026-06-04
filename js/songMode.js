@@ -6,6 +6,7 @@ import { parseChordSheet } from './chordSheet.js';
 import { getPattern } from './strumming.js';
 import { renderStrumming } from './strummingView.js';
 import { STRUMMING_PATTERNS } from '../data/strummingPatterns.js';
+import { getBuiltinSong } from '../data/songsBuiltin.js';
 
 const DEFAULT_PATTERN = 'island';
 
@@ -63,13 +64,20 @@ Versul tău aici..."></textarea>
 
 export function screenSong(ctx, id) {
   const el = document.createElement('div');
-  const song = ctx.songs.get(id);
+  let song, readOnly = false;
+  if (id && id.startsWith('builtin:')) {
+    song = getBuiltinSong(id.slice('builtin:'.length));
+    readOnly = true;
+  } else {
+    song = ctx.songs.get(id);
+  }
   if (!song) { el.innerHTML = '<button class="back" id="back">‹ Piese</button><p>Piesă inexistentă.</p>'; el.querySelector('#back').onclick = () => ctx.router.go('/songs'); return el; }
   const instrument = INSTRUMENTS[song.instrument];
   const { rows, chordsUsed } = parseChordSheet(song.text);
+  const backTo = readOnly ? '/lessons' : '/songs';
 
-  el.innerHTML = `<button class="back" id="back">‹ Piese</button>
-    <div class="stepbar"><b>${escapeHtml(song.title)}</b><span>${instrument.name}</span></div>
+  el.innerHTML = `<button class="back" id="back">‹ ${readOnly ? 'Lecții' : 'Piese'}</button>
+    <div class="stepbar"><b>${escapeHtml(song.title)}</b><span>${song.artist ? escapeHtml(song.artist) + ' · ' : ''}${instrument.name}</span></div>
     <div class="chord-strip"></div>
     <div class="song-strum">
       <div class="panel-label">Strumming sugerat</div>
@@ -80,10 +88,10 @@ export function screenSong(ctx, id) {
     </div>
     <div class="song-body"></div>
     <div class="chord-detail"></div>
-    <button class="danger" id="del">Șterge piesa</button>`;
+    ${readOnly ? '' : '<button class="danger" id="del">Șterge piesa</button>'}`;
 
-  el.querySelector('#back').onclick = () => { ctx.audio.stop(); ctx.router.go('/songs'); };
-  el.querySelector('#del').onclick = () => { ctx.audio.stop(); ctx.songs.remove(id); ctx.router.go('/songs'); };
+  el.querySelector('#back').onclick = () => { ctx.audio.stop(); ctx.router.go(backTo); };
+  if (!readOnly) el.querySelector('#del').onclick = () => { ctx.audio.stop(); ctx.songs.remove(id); ctx.router.go('/songs'); };
 
   // chord strip (unique chords)
   const strip = el.querySelector('.chord-strip');
@@ -127,7 +135,7 @@ export function screenSong(ctx, id) {
   let strum = renderStrumming(el.querySelector('.strum-holder'), getPattern(sel.value));
   sel.onchange = () => {
     strum = renderStrumming(el.querySelector('.strum-holder'), getPattern(sel.value));
-    ctx.songs.save({ ...song, strummingId: sel.value });
+    if (!readOnly) ctx.songs.save({ ...song, strummingId: sel.value });
   };
 
   let bpm = 70;
