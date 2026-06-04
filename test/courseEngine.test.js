@@ -47,3 +47,31 @@ test('markComplete is idempotent (no duplicates)', () => {
   c.markComplete('guitar', 'g1');
   assert.deepEqual(c.getCompleted('guitar'), ['g1']);
 });
+
+test('getLevels returns 4 levels with lessons and challenge', () => {
+  const c = createCourse(fakeStorage());
+  const levels = c.getLevels('guitar');
+  assert.equal(levels.length, 4);
+  assert.ok(levels[0].lessons.length > 0 && levels[0].challenge);
+});
+
+test('level is incomplete until all its lessons are done; challenge locked', () => {
+  const c = createCourse(fakeStorage());
+  const lv = c.getLevels('guitar')[0];
+  assert.equal(c.isLevelComplete('guitar', lv.id), false);
+  assert.equal(c.isChallengeUnlocked('guitar', lv.id), false);
+});
+
+test('completing all lessons in a level completes it and unlocks the challenge', () => {
+  const c = createCourse(fakeStorage());
+  const lv = c.getLevels('guitar')[0];
+  lv.lessons.forEach((l) => c.markComplete('guitar', l.id));
+  assert.equal(c.isLevelComplete('guitar', lv.id), true);
+  assert.equal(c.isChallengeUnlocked('guitar', lv.id), true);
+});
+
+test('level 2 lessons are locked until level 1 is complete', () => {
+  const c = createCourse(fakeStorage());
+  const firstL2Index = c.getLevels('guitar')[0].lessons.length; // first lesson of L2
+  assert.equal(c.isUnlocked('guitar', firstL2Index), false);
+});
