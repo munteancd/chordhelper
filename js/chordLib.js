@@ -30,6 +30,43 @@ function rootCandidates(root) {
   return out;
 }
 
+// Pitch class per root spelling — the chord-db dataset mixes sharps and flats,
+// and guitar vs ukulele use different spellings, so we match by pitch class.
+const PITCH_CLASS = {
+  C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6,
+  G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11,
+};
+const ROOT_RE = /^([A-G][#b]?)(.*)$/;
+
+// The 12 chromatic roots in this instrument's own spelling, ordered C..B.
+export function listRoots(instrument) {
+  const lib = CHORD_LIBRARY[instrument.id];
+  if (!lib) return [];
+  const byPc = {};
+  for (const key of Object.keys(lib)) {
+    const m = key.match(ROOT_RE);
+    if (m && PITCH_CLASS[m[1]] !== undefined && byPc[PITCH_CLASS[m[1]]] === undefined) {
+      byPc[PITCH_CLASS[m[1]]] = m[1];
+    }
+  }
+  return Object.keys(byPc).map(Number).sort((a, b) => a - b).map((pc) => byPc[pc]);
+}
+
+// Quality suffixes available for a given root (matched by pitch class, so any
+// enharmonic spelling of the root works).
+export function listQualities(root, instrument) {
+  const lib = CHORD_LIBRARY[instrument.id];
+  if (!lib) return [];
+  const targetPc = PITCH_CLASS[root];
+  if (targetPc === undefined) return [];
+  const out = [];
+  for (const key of Object.keys(lib)) {
+    const m = key.match(ROOT_RE);
+    if (m && PITCH_CLASS[m[1]] === targetPc) out.push(m[2]);
+  }
+  return out;
+}
+
 export function getChordShape(name, instrument) {
   const lib = CHORD_LIBRARY[instrument.id];
   if (!lib) return null;
