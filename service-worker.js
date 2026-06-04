@@ -1,5 +1,5 @@
 // service-worker.js
-const CACHE = 'chordhelper-v6';
+const CACHE = 'chordhelper-v7';
 const ASSETS = [
   './', './index.html', './manifest.json', './icon.svg',
   './css/styles.css',
@@ -7,7 +7,7 @@ const ASSETS = [
   './js/chordRenderer.js', './js/strumming.js', './js/strummingView.js',
   './js/audioEngine.js', './js/scheduleMath.js', './js/courseEngine.js',
   './js/chordLib.js', './js/chordSheet.js', './js/songStore.js', './js/songMode.js',
-  './js/transpose.js',
+  './js/transpose.js', './js/pitch.js', './js/tuner.js',
   './data/instruments.js', './data/strummingPatterns.js',
   './data/chordLibrary.js', './data/curriculum.js', './data/songsBuiltin.js',
 ];
