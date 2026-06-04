@@ -19,12 +19,14 @@ export function screenHome(ctx) {
       <button class="primary" id="go-lessons">Lecții</button>
       <button id="go-songs">Piese</button>
       <button id="go-ref">Caută un acord</button>
+      <button id="go-tuner">🎸 Acordează</button>
     </div>`;
   el.querySelectorAll('.inst-switch button').forEach((b) =>
     b.onclick = () => { ctx.course.setInstrument(b.dataset.i); ctx.router.start(); });
   el.querySelector('#go-lessons').onclick = () => ctx.router.go('/lessons');
   el.querySelector('#go-ref').onclick = () => ctx.router.go('/reference');
   el.querySelector('#go-songs').onclick = () => ctx.router.go('/songs');
+  el.querySelector('#go-tuner').onclick = () => ctx.router.go('/tuner');
   return el;
 }
 
