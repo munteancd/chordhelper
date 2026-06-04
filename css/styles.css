@@ -16,7 +16,7 @@ h1{margin:.2em 0;}
 .inst-switch{display:flex;gap:8px;margin:16px 0;}
 .inst-switch button,.home-actions button,.bpm button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 16px;}
 .inst-switch button.on{border-color:var(--accent);color:var(--accent);}
-.home-actions{display:flex;gap:10px;}
+.home-actions{display:flex;gap:10px;flex-wrap:wrap;}
 button.primary{background:var(--accent);color:#06101f;border:none;border-radius:10px;padding:12px 16px;font-weight:700;}
 .back{background:none;border:none;color:var(--muted);padding:8px 0;}
 .lesson-list{display:flex;flex-direction:column;gap:8px;}
@@ -71,3 +71,30 @@ button.primary{background:var(--accent);color:#06101f;border:none;border-radius:
 .chord-detail{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0;text-align:center;}
 .chord-detail .chord-svg{max-width:200px;margin:0 auto;}
 button.danger{background:none;border:1px solid #e06b6b;color:#e06b6b;border-radius:10px;padding:10px 16px;margin-top:8px;}
+
+/* v3: level-based course */
+.level-list{display:flex;flex-direction:column;gap:18px;}
+.level{display:flex;flex-direction:column;gap:8px;}
+.level.locked{opacity:.55;}
+.level-head{display:flex;align-items:center;gap:10px;}
+.level-head b{font-size:15px;}
+.level-head small{color:var(--muted);}
+.progress{flex:1;height:6px;background:var(--panel2);border-radius:999px;overflow:hidden;}
+.progress>span{display:block;height:100%;background:var(--ok);border-radius:999px;}
+.challenge-card{background:linear-gradient(90deg,rgba(176,124,255,.18),rgba(78,161,255,.18));border:1px solid var(--accent2);color:var(--text);border-radius:12px;padding:12px;font-weight:700;text-align:left;}
+
+/* v3: transpose control */
+.transpose{display:flex;align-items:center;gap:8px;margin:8px 0;}
+.transpose span:first-child{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.transpose button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;width:34px;height:34px;}
+.transpose #tr-val{min-width:28px;text-align:center;font-weight:700;}
+
+/* v3: tuner */
+.tuner-note{font-size:64px;font-weight:800;text-align:center;margin:10px 0 2px;}
+.tuner-string{text-align:center;color:var(--muted);margin-bottom:14px;}
+.tuner-meter{position:relative;height:14px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;margin:0 auto 6px;max-width:240px;}
+.tuner-meter::before{content:"";position:absolute;left:50%;top:-4px;width:2px;height:22px;background:var(--ok);transform:translateX(-50%);}
+.needle{position:absolute;left:50%;top:-3px;width:6px;height:20px;border-radius:3px;background:var(--accent);transition:transform .08s;}
+.tuner-hint{text-align:center;font-weight:700;min-height:1.4em;margin:6px 0;}
+.tuner-hint.ok{color:var(--ok);}
+.tuner-hint.off{color:#e0b86b;}
