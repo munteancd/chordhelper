@@ -1,5 +1,5 @@
 // service-worker.js
-const CACHE = 'chordhelper-v3';
+const CACHE = 'chordhelper-v4';
 const ASSETS = [
   './', './index.html', './manifest.json', './icon.svg',
   './css/styles.css',
@@ -7,8 +7,8 @@ const ASSETS = [
   './js/chordRenderer.js', './js/strumming.js', './js/strummingView.js',
   './js/audioEngine.js', './js/scheduleMath.js', './js/courseEngine.js',
   './js/chordLib.js', './js/chordSheet.js', './js/songStore.js', './js/songMode.js',
-  './data/instruments.js', './data/chords.js', './data/strummingPatterns.js', './data/lessons.js',
-  './data/chordLibrary.js',
+  './data/instruments.js', './data/chords.js', './data/strummingPatterns.js',
+  './data/chordLibrary.js', './data/curriculum.js', './data/songsBuiltin.js',
 ];
 
 self.addEventListener('install', (e) => {
