@@ -7,6 +7,7 @@ import { getPattern } from './strumming.js';
 import { renderStrumming } from './strummingView.js';
 import { STRUMMING_PATTERNS } from '../data/strummingPatterns.js';
 import { getBuiltinSong } from '../data/songsBuiltin.js';
+import { transposeChord } from './transpose.js';
 
 const DEFAULT_PATTERN = 'island';
 
@@ -78,6 +79,8 @@ export function screenSong(ctx, id) {
 
   el.innerHTML = `<button class="back" id="back">‹ ${readOnly ? 'Lecții' : 'Piese'}</button>
     <div class="stepbar"><b>${escapeHtml(song.title)}</b><span>${song.artist ? escapeHtml(song.artist) + ' · ' : ''}${instrument.name}</span></div>
+    <div class="transpose"><span>Ton</span>
+      <button id="tr-down">−</button><span id="tr-val">0</span><button id="tr-up">+</button></div>
     <div class="chord-strip"></div>
     <div class="song-strum">
       <div class="panel-label">Strumming sugerat</div>
@@ -102,29 +105,38 @@ export function screenSong(ctx, id) {
     detail.innerHTML = `<div class="chord-name">${escapeHtml(name)}</div>` + renderChordSVG(shape, instrument);
     if (play) ctx.audio.playChord(shape, instrument);
   }
-  chordsUsed.forEach((name) => {
-    const shape = getChordShape(name, instrument);
-    const b = document.createElement('button');
-    b.className = 'chord-mini' + (shape ? '' : ' unknown');
-    b.innerHTML = `<span class="cm-name">${escapeHtml(name)}</span>` + (shape ? renderChordSVG(shape, instrument) : '<span class="cm-na">?</span>');
-    b.onclick = () => showDetail(name);
-    strip.appendChild(b);
-  });
-
-  // song body (chords above lyrics)
   const body = el.querySelector('.song-body');
-  rows.forEach((row) => {
-    const rEl = document.createElement('div');
-    rEl.className = 'song-row';
-    const cLine = document.createElement('pre');
-    cLine.className = 'chord-line';
-    cLine.textContent = chordLineText(row.chords);
-    const lLine = document.createElement('pre');
-    lLine.className = 'lyric-line';
-    lLine.textContent = row.lyrics;
-    rEl.append(cLine, lLine);
-    body.appendChild(rEl);
-  });
+  let transpose = 0;
+  const disp = (name) => transposeChord(name, transpose);
+
+  function redraw() {
+    // chord strip (unique chords, transposed)
+    strip.innerHTML = '';
+    chordsUsed.forEach((name) => {
+      const shown = disp(name);
+      const shape = getChordShape(shown, instrument);
+      const b = document.createElement('button');
+      b.className = 'chord-mini' + (shape ? '' : ' unknown');
+      b.innerHTML = `<span class="cm-name">${escapeHtml(shown)}</span>` + (shape ? renderChordSVG(shape, instrument) : '<span class="cm-na">?</span>');
+      b.onclick = () => showDetail(shown);
+      strip.appendChild(b);
+    });
+    // song body (chords above lyrics, transposed)
+    body.innerHTML = '';
+    rows.forEach((row) => {
+      const rEl = document.createElement('div');
+      rEl.className = 'song-row';
+      const cLine = document.createElement('pre');
+      cLine.className = 'chord-line';
+      cLine.textContent = chordLineText(row.chords.map((c) => ({ name: disp(c.name), col: c.col })));
+      const lLine = document.createElement('pre');
+      lLine.className = 'lyric-line';
+      lLine.textContent = row.lyrics;
+      rEl.append(cLine, lLine);
+      body.appendChild(rEl);
+    });
+    if (chordsUsed.length) showDetail(disp(chordsUsed[0]), false);
+  }
 
   // strumming + metronome
   const sel = el.querySelector('#pattern');
@@ -151,7 +163,16 @@ export function screenSong(ctx, id) {
     else { toggle.textContent = '▶ Start'; ctx.audio.stop(); strum.clear(); }
   };
 
-  if (chordsUsed.length) showDetail(chordsUsed[0], false);
+  const trVal = el.querySelector('#tr-val');
+  const setTr = (d) => {
+    transpose = Math.max(-11, Math.min(11, transpose + d));
+    trVal.textContent = transpose > 0 ? '+' + transpose : '' + transpose;
+    redraw();
+  };
+  el.querySelector('#tr-down').onclick = () => setTr(-1);
+  el.querySelector('#tr-up').onclick = () => setTr(1);
+
+  redraw();
   return el;
 }
 
